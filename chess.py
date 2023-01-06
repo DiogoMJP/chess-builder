@@ -1,10 +1,27 @@
+from abc import ABC, abstractmethod
+
+
 class Board():
     def __init__(self, name, width, height):
         self.name = name
         self.size = (width, height)
 
 
-class PieceType():
+class MovementRule(ABC):
+    @abstractmethod
+    def get_movs(self, board, pos):
+        pass
+
+    @abstractmethod
+    def move(self, board, pos):
+        pass
+
+
+class AbsoluteMovement(MovementRule):
+    def __init__(self, mov_list):
+        
+
+class Piece():
     def __init__(self, name, image):
         self.name = name
         self.image = image
@@ -12,6 +29,11 @@ class PieceType():
         self.is_piece = False
         self.board = None
         self.pos = None
+
+    def set_piece(self, board, x, y):
+        self.board = board
+        self.pos = (x, y)
+        self.is_piece = True
 
     def add_movements(self, mov_list, rule_type):
         if rule_type == "ABS":
