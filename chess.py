@@ -4,10 +4,21 @@ from abc import ABC, abstractmethod
 Vector = tuple[int, int]
 
 
+class Game():
+    def __init__(self) -> None:
+        pass
+
+
 class Board():
     def __init__(self, name: str, size: Vector) -> None:
         self.name = name
         self.size = size
+
+
+class Script(ABC):
+    @abstractmethod
+    def get_value(self, game: Game) -> None:
+        pass
 
 
 class MovementRule(ABC):
@@ -24,7 +35,7 @@ class MovementRule(ABC):
         pass
 
     @abstractmethod
-    def move(self, board, pos, target) -> None:
+    def move(self, board: Board, pos: Vector, target: Vector) -> None:
         pass
 
 
@@ -35,13 +46,13 @@ class AbsoluteMovement(MovementRule):
 
     def can_move(self, board: Board, mov: Vector) -> bool:
         return self.mov_rule(board, mov)
-    
+
     def get_movs(self, board: Board, mov: Vector) -> list[Vector]:
         movs = []
         for mov in self.mov_list:
             if self.can_move(board, mov):
                 movs += [mov]
-        
+
         return movs
 
 
@@ -52,13 +63,13 @@ class RelativeMovement(MovementRule):
 
     def can_move(self, board: Board, mov: Vector) -> bool:
         return self.mov_rule(board, mov)
-    
+
     def get_movs(self, board: Board, pos: Vector) -> list[Vector]:
         movs = []
         for mov in self.mov_list:
             if self.can_move(board, mov):
                 movs += [(pos[0] + mov[0], pos[1] + mov[1])]
-        
+
         return movs
 
 
@@ -73,7 +84,7 @@ class Piece():
 
     def set_piece(self, board: Board, pos: Vector) -> None:
         self.board = board
-        self.pos = (x, y)
+        self.pos = pos
         self.is_piece = True
 
     def add_movements(self, mov_list: list[Vector], rule_type: str) -> None:
